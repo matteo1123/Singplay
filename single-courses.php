@@ -11,18 +11,11 @@
  */
 $add_classes = get_field( 'add_classes' );
 $post = $add_classes[0];
-$watchedVideos = new WP_Query(array(
-    'post_type' => 'watches',
-    'meta_query' => array(
-        array(
-            'key' => 'user_id',
-            'compare' => '=',
-            'value' => get_current_user_id()
-        )
-        )
-    ));
+global $wpdb;
+$results = $wpdb->get_results('SELECT * FROM wp_posts INNER JOIN wp_postmeta ON wp_posts.ID = wp_postmeta.post_id WHERE wp_posts.post_type = "watches"   ');
+
     echo '<pre>';
-    print_r($watchedVideos);
+    print_r($results);
     echo '</pre>';
     
 get_header(); ?>
