@@ -678,7 +678,7 @@ require get_parent_theme_file_path( '/inc/icon-functions.php' );
 require get_template_directory() . '/inc/block-patterns.php';
 
 
-
+/////////////////////////////////// Edits made by matt@hirematt.dev /////////////////////////////////////////////
 //  function wd_admin_menu_remove() {
 // 	remove_menu_page( 'link-manager.php' );
 // 	remove_submenu_page( 'plugins.php', 'plugin-editor.php' );
@@ -714,11 +714,11 @@ function custom_dashboard_help() {
 	
 // COLUMNS WITH SHORTCUTS	
 	echo '<div class="row" style="width:80vw; display:flex; justify-content:space-around;"> 
-  	<div class="col-md-2 col-12"><a  href="/wp-admin/edit.php?post_type=page" class="btn col-12 btn-lg btn-dark">Pages</a></div>
-	<div class="col-md-2"><a href="/wp-admin/edit.php" class="btn col-12 btn-lg btn-dark">Posts</a></div>
-	<div class="col-md-2"><a href="/wp-admin/edit.php?post_type=courses" class="btn col-12 btn-lg btn-dark">Courses</a></div>
-	<div class="col-md-2"><a href="/wp-admin/edit.php?post_type=classes" class="btn col-12 btn-lg btn-dark">Classes</a></div>
-  	<div class="col-md-2"><a href="/wp-admin/nav-menus.php" class="btn btn-lg px-0 col-12 btn-dark">Payments</a></div>
+  	<div class="col-md-2 col-12"><a title="Pages make up the back bone of the site"  href="/wp-admin/edit.php?post_type=page" class="btn col-12 btn-lg btn-dark">Pages</a></div>
+	<div class="col-md-2"><a href="/wp-admin/edit.php" title="Posts are open to the public free to everyone content that you can easily generate" class="btn col-12 btn-lg btn-dark">Posts</a></div>
+	<div class="col-md-2"><a href="/wp-admin/edit.php?post_type=courses" title="One course consists of many classes" class="btn col-12 btn-lg btn-dark">Courses</a></div>
+	<div class="col-md-2"><a href="/wp-admin/edit.php?post_type=classes" title="classes are often videos but can be other content as well" class="btn col-12 btn-lg btn-dark">Classes</a></div>
+  	<div class="col-md-2"><a href="/wp-admin/nav-menus.php" title="your payments portal" class="btn btn-lg px-0 col-12 btn-dark">Payments</a></div>
   </div>';
   
 
@@ -769,7 +769,8 @@ function custom_post_type() {
 			'has_archive'         => true,
 			'exclude_from_search' => false,
 			'publicly_queryable'  => true,
-			'capability_type'     => 'post',
+			'capability_type'     => 'course',
+			'map_meta_cap'  	  => true,
 			'show_in_rest' => false,
 	 
 		);
@@ -819,8 +820,9 @@ function custom_post_type() {
 				'has_archive'         => true,
 				'exclude_from_search' => false,
 				'publicly_queryable'  => true,
-				'capability_type'     => 'post',
-				'show_in_rest' => true,
+				'capability_type'     => 'class',
+				'map_meta_cap'  	  => true,
+				'show_in_rest' 		  => true,
 		 
 			);
 			 
@@ -864,9 +866,50 @@ function custom_post_type() {
 			'show_in_rest' 		  => false,
 	 
 		);
+		$courseslabels = array(
+			'name'                => _x( 'Course Ownership', 'Post Type General Name', 'twentytwenty' ),
+			'singular_name'       => _x( 'Course Ownership', 'Post Type Singular Name', 'twentytwenty' ),
+			'all_items'           => __( 'All Courses Owned', 'twentytwenty' ),
+			'add_new_item'        => __( 'Add New Course Ownership', 'twentytwenty' ),
+			'edit_item'           => __( 'Edit Course Ownership', 'twentytwenty' ),
+			'update_item'         => __( 'Update Course Ownership', 'twentytwenty' ),
+			'search_items'        => __( 'Search Course Ownership', 'twentytwenty' ),
+			'not_found'           => __( 'Not Found', 'twentytwenty' ),
+			'not_found_in_trash'  => __( 'Not found in Trash', 'twentytwenty' ),
+		);
+		 
+	// Set other options for Custom Post Type
+		 
+		$coursesargs = array(
+			'label'               => __( 'watches', 'twentytwenty' ),
+			'description'         => __( 'tracking of which videos students have already watched', 'twentytwenty' ),
+			'labels'              => $courseslabels,
+			// Features this CPT supports in Post Editor
+			'supports'            => array( 'title' ),
+			// You can associate this CPT with a taxonomy or custom taxonomy. 
+			'taxonomies'          => array( 'genres' ),
+			/* A hierarchical CPT is like Pages and can have
+			* Parent and child items. A non-hierarchical CPT
+			* is like Posts.
+			*/ 
+			'hierarchical'        => false,
+			'public'              => false,
+			'show_ui'             => true,
+			'show_in_menu'        => true,
+			'show_in_nav_menus'   => true,
+			'show_in_admin_bar'   => true,
+			'menu_position'       => 5,
+			'can_export'          => true,
+			'has_archive'         => true,
+			'exclude_from_search' => false,
+			'publicly_queryable'  => true,
+			'show_in_rest' 		  => false,
+	 
+		);
 		 
 		// Registering your Custom Post Type
 			register_post_type( 'watches', $watchesargs );
+			register_post_type( 'coursesowned', $coursesargs );
 			register_post_type( 'courses', $args );
 			register_post_type( 'classes', $classargs );
 	 
@@ -892,14 +935,68 @@ if( function_exists('acf_register_block') ) {
 		//'keywords'		=> array(),
 	));
 }
-function courses_block_html() {
-	
-	// vars
-
-	
-	?>
-	<blockquote >
-Hello
-	</blockquote>
-	<?php
+wp_enqueue_script( 'customjs', get_theme_file_uri( '/assets/js/custom.js' ));
+add_action('rest_api_init', 'watchedRoutes');
+function watchedRoutes() {
+	register_rest_route('api/v1', 'manageWatches/', array(
+		'methods' => 'POST',
+		'callback' => 'createWatch'
+	));
+	register_rest_route('api/v1', 'manageWatches/', array(
+		'methods' => 'DELETE',
+		'callback' => 'deleteWatch'
+	));
 }
+
+function createWatch($data) {
+	$class_id = $data['class_id'];
+	$user_id = $data['user_id'];
+	return wp_insert_post(array(
+		'post_type' => 'watches',
+		'post_status' => 'publish',
+		'post_title' => 'video watched',
+		'meta_input' => array(
+			'class_id' => $class_id,
+			'user_id' => $user_id,
+			)
+		));
+}
+function deleteWatch($data) {
+	$post_id = $data['delete_post']['id'];
+	wp_delete_post($post_id);
+	return $data['delete_post'];
+}
+
+// redirect non admin users out of admin and onto homepage
+add_action('admin_init', 'redirectStudentsToFrontend');
+
+function redirectStudentsToFrontend() {
+	$currentUser = wp_get_current_user();
+	if(!in_array("administrator", $currentUser->roles)) {
+		wp_redirect(site_url('/'));
+		exit;
+	}
+}
+
+add_action('wp_loaded', 'removeAdminBar');
+
+function removeAdminBar() {
+	$currentUser = wp_get_current_user();
+	if(!in_array("administrator", $currentUser->roles)) {
+		show_admin_bar(false);
+	}
+}
+
+// customize login screen 
+add_filter('login_headerurl', 'ourHeaderUrl');
+
+function ourHeaderUrl() {
+	return esc_url(site_url('/'));
+}
+
+add_action('login_enqueue_scripts', 'loginCSS');
+
+function loginCss() {
+	wp_enqueue_style( 'logincss', get_theme_file_uri( '/assets/css/login.css' ));
+}
+

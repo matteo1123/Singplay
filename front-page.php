@@ -16,43 +16,6 @@ get_header(); ?>
 
 <div id="primary" class="content-area">
 	<main id="main" class="site-main" role="main">
-	<?php
-	define('__ROOT__', dirname(dirname(__FILE__)));
-	require_once(__ROOT__.'\TWENTYSEVENTEEN\stripe\stripe-php\init.php');
-	\Stripe\Stripe::setApiKey('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');
-
-	$session = \Stripe\Checkout\Session::create([
-	'payment_method_types' => ['card'],
-	'line_items' => [[
-		'price_data' => [
-		'currency' => 'usd',
-		'product_data' => [
-			'name' => 'T-shirt',
-		],
-		'unit_amount' => 2000,
-		],
-		'quantity' => 1,
-	]],
-	'mode' => 'payment',
-	'success_url' => 'http://localhost:4242/success',
-	'cancel_url' => 'http://example.com/cancel',
-	]);
-	?>
-
-
-    <title>Buy cool new product</title>
-    <script src="https://js.stripe.com/v3/"></script>
-    <button id="checkout-button">Checkout</button>
-    <script>
-      var stripe = Stripe('pk_live_51J8aHSL0JmGeLUnZrw3QAoCBBvwdEn1SE2PQYA3EetCL009aShmh7nb5x9uBlTiv2jznyFakBvMRIM9jbngYu8wB0009bMePPj');
-      const btn = document.getElementById("checkout-button")
-      btn.addEventListener('click', function(e) {
-        e.preventDefault();
-        stripe.redirectToCheckout({
-          sessionId: "<?php echo $session->id; ?>"
-        });
-      });
-    </script>
 
 		<?php
 		// Show the selected front page content.

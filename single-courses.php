@@ -9,34 +9,146 @@
  * @since Twenty Seventeen 1.0
  * @version 1.0
  */
+if(!is_user_logged_in()) {
+    wp_redirect("/");
+} else {
+    $ID = get_the_ID();
+    $purchased = $wpdb->get_results('SELECT * FROM wp_posts INNER JOIN wp_postmeta ON wp_posts.ID = wp_postmeta.post_id WHERE wp_posts.post_type = "coursesowned" AND wp_posts.post_status = "publish" ');
+
+}
+?>
+<!DOCTYPE html>
+<html <?php language_attributes(); ?> class="no-js no-svg">
+<head>
+<meta charset="<?php bloginfo( 'charset' ); ?>">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="profile" href="https://gmpg.org/xfn/11">
+
+<?php wp_head(); ?>
+</head>
+
+<body <?php body_class(); ?>>
+<?php wp_body_open(); ?>
+<div id="page" class="site">
+	<a class="skip-link screen-reader-text" href="#content"><?php _e( 'Skip to content', 'twentyseventeen' ); ?></a>
+
+	<header id="masthead" class="site-header" role="banner">
+
+		<?php get_template_part( 'template-parts/header/header', 'image' ); ?>
+
+		<?php if ( has_nav_menu( 'top' ) ) : ?>
+			<div class="navigation-top">
+				<div class="wrap">
+					<?php get_template_part( 'template-parts/navigation/navigation', 'top' ); ?>
+				</div><!-- .wrap -->
+                <a href=<?php echo wp_logout_url(); ?> class="login btn btn-outline-secondary">Logout</a>
+			</div><!-- .navigation-top -->
+		<?php endif; ?>
+
+	</header><!-- #masthead -->
+
+	<?php
+
+	/*
+	 * If a regular post or page, and not the front page, show the featured image.
+	 * Using get_queried_object_id() here since the $post global may not be set before a call to the_post().
+	 */
+	if ( ( is_single() || ( is_page() && ! twentyseventeen_is_frontpage() ) ) && has_post_thumbnail( get_queried_object_id() ) ) :
+		echo '<div class="single-featured-image-header">';
+		echo get_the_post_thumbnail( get_queried_object_id(), 'twentyseventeen-featured-image' );
+		echo '</div><!-- .single-featured-image-header -->';
+	endif;
+	?>
+
+	<div >
+		<div >
+
+<?php
 $add_classes = get_field( 'add_classes' );
 $post = $add_classes[0];
 global $wpdb;
-$results = $wpdb->get_results('SELECT * FROM wp_posts INNER JOIN wp_postmeta ON wp_posts.ID = wp_postmeta.post_id WHERE wp_posts.post_type = "watches"   ');
-
-    echo '<pre>';
-    print_r($results);
-    echo '</pre>';
-    
-get_header(); ?>
-
+$results = $wpdb->get_results('SELECT * FROM wp_posts INNER JOIN wp_postmeta ON wp_posts.ID = wp_postmeta.post_id WHERE wp_posts.post_type = "watches" AND wp_posts.post_status = "publish"  ');
+if(count($results) > 0) {
+    $watched = array();
+    $user_results = array();
+    $user_watched = array();
+    $arr = array();
+    foreach($results as $result) {
+        if($result->meta_key == "class_id") {
+           $arr['class_id'] = $result->meta_value;
+           $arr['id'] = $result->ID;
+        }
+        if($result->meta_key == "user_id") {
+            $arr['user_id'] = $result->meta_value;
+         }
+        if($arr['user_id'] && $arr['class_id']) {
+            array_push($watched, $arr);
+            $arr = array();
+        }
+    }
+    foreach($watched as $watch) {
+        if($watch['user_id'] == get_current_user_id()) {
+            array_push($user_results, $watch);
+            array_push($user_watched, $watch['class_id']);
+        }
+    }
+}
+// echo '<pre>';
+// print_r($user_results);
+// echo '</pre>';
+?>
+<script type="text/javascript">
+    let watches = <?php echo json_encode($user_watched); ?>;
+    let user_results = <?php echo json_encode($user_results); ?>;
+</script>
 
 <div >
-	<div class="container">
-		<div  class="row">
-        <div class="col-9" style="border:solid black 2px; height: 1000px;">
-        <iframe style="width:100%; height:100%;" name="class_window" src="<?php echo the_permalink() ?>" noscroll>
-        </iframe>
+	<div class="container" style="margin:0;">
+		<div style="width:100vw;" class="row">
+        <div class="col-9" style="height: 1000px; padding:0;">
+        <div style="width:100%; height:100%; border:0;" class="class_window">
         </div>
-        <div class="col-3">
+        </div>
+        <div style="padding:0; margin:0;" class="col-3">
             <ol>
-                <?php foreach( $add_classes as $post ):?>
-                    <div style="padding: 45px 45px 45px 45px; margin:0;"  class="btn btn-outline-secondary row">
-                        <a class="col-10" target="class_window" href="<?php echo the_permalink() ?>">
-                            <li title="view <?php echo get_the_title()?>" ><?php echo get_the_title() ?><a class="col-2" title="Mark lesson completed" style="padding:15px; margin:0;" >X</a></li>
-                        </a>
-                    </div>
-                <?php endforeach; ?> 
+                <?php if($add_classes) { ?>
+                    <?php foreach( $add_classes as $post ):?>
+                    <?php if(is_array($user_watched)): ?>
+                        <?php if(in_array(get_the_ID(),$user_watched)): ?>
+                        
+                        <div 
+                            title="view <?php echo get_the_title()?>"
+                            data-post=<?php echo basename(get_permalink()) ?>  
+                            data-id=<?php echo get_the_ID() ?>
+                            style="padding: 45px 45px 45px 30px; margin:0;"  
+                            class="class-link btn btn-outline-light btn-block row"
+                        >
+                            <li ><?php echo get_the_title() ?></li>
+                        </div>
+                        <?php else: ?>
+                            <div 
+                                data-post=<?php echo basename(get_permalink()) ?> 
+                                data-id=<?php echo get_the_ID() ?>
+                                style="padding: 45px 45px 45px 30px; margin:0;"  
+                                class="class-link btn btn-block btn-outline-dark row"
+                                title="view <?php echo get_the_title()?> again (already completed lesson)"
+                            >
+                                <li><?php echo get_the_title() ?></li>
+                            </div>
+                        <?php endif; ?>
+                    <?php else: ?>
+                        <div 
+                            title="view <?php echo get_the_title()?>"
+                            data-id=<?php echo get_the_ID() ?>
+                            data-post=<?php echo basename(get_permalink()) ?>  
+                            style="padding: 45px 45px 45px 30px; margin:0;"  
+                            class="class-link btn btn-outline-dark btn-block row"
+                        >
+                            <li ><?php echo get_the_title() ?></li>
+                        </div>
+                    <?php endif; ?>
+                <?php endforeach;
+                } ?> 
             </ol>
         </div>
 		</div><!-- #main -->

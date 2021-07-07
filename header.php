@@ -11,13 +11,14 @@
  * @since Twenty Seventeen 1.0
  * @version 1.0
  */
-
+$page_id = $wp_query->queried_object->post_name;
 ?><!DOCTYPE html>
 <html <?php language_attributes(); ?> class="no-js no-svg">
 <head>
 <meta charset="<?php bloginfo( 'charset' ); ?>">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="profile" href="https://gmpg.org/xfn/11">
+
 
 <?php wp_head(); ?>
 </head>
@@ -36,6 +37,13 @@
 				<div class="wrap">
 					<?php get_template_part( 'template-parts/navigation/navigation', 'top' ); ?>
 				</div><!-- .wrap -->
+				<?php if(is_user_logged_in()) { ?>
+					<a href=<?php echo wp_logout_url(); ?> class="login btn btn-outline-secondary">Logout</a>
+				<?php } else { ?>
+					<a href=<?php echo wp_registration_url(); ?> class="signup btn btn-small btn-secondary">Sign Up</a>
+					<a href=<?php echo wp_login_url(); ?> class="login btn btn-outline-secondary">Login</a>
+				<?php } ?>
+
 			</div><!-- .navigation-top -->
 		<?php endif; ?>
 
@@ -52,7 +60,10 @@
 		echo get_the_post_thumbnail( get_queried_object_id(), 'twentyseventeen-featured-image' );
 		echo '</div><!-- .single-featured-image-header -->';
 	endif;
+	if (!is_user_logged_in()) {
+		echo the_field('public', get_the_ID());
+	}
 	?>
-
 	<div class="site-content-contain">
 		<div id="content" class="site-content">
+		

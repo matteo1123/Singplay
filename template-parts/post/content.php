@@ -40,7 +40,7 @@
 		}
 		?>
 	</header><!-- .entry-header -->
-
+		<p><?php echo the_excerpt(); ?></p>
 	<?php if ( '' !== get_the_post_thumbnail() && ! is_single() ) : ?>
 		<div class="post-thumbnail">
 			<a href="<?php the_permalink(); ?>">

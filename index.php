@@ -16,27 +16,26 @@
  */
 
 get_header(); ?>
-
-<div class="wrap">
-	<?php if ( is_home() && ! is_front_page() ) : ?>
-		<header class="page-header">
-			<h1 class="page-title"><?php single_post_title(); ?></h1>
-		</header>
-	<?php else : ?>
-	<header class="page-header">
-		<h2 class="page-title"><?php _e( 'Posts', 'twentyseventeen' ); ?></h2>
-	</header>
-	<?php endif; ?>
-
 	<div id="primary" class="content-area">
-		<main id="main" class="site-main" role="main">
+		<main id="main" class="site-main container" role="main">
+			<?php while(have_posts()) {
+				the_post();?>
+				<div class="post-item">
+					<h2 class="headline headline--medium headline--post-title"><a href="<?php echo the_permalink(); ?>"><?php echo the_title(); ?></a></h2>
+					<div class="meta-box">
+						<p> posted by Brad </p>
+					</div>
+					<div class="generic content">
+						<?php echo the_excerpt() ?>
+						<a class="btn" href=<?php echo the_permalink(); ?>Continue Reading &raquo;</a></p>
+					</div>
+				</div>
+			<?php } ?>
+		</main>
+	</div>
 
-
-
-		</main><!-- #main -->
-	</div><!-- #primary -->
+	
 	<?php get_sidebar(); ?>
-</div><!-- .wrap -->
 
 <?php
 get_footer();
