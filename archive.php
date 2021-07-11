@@ -1,6 +1,6 @@
 <?php
 /**
- * The template for displaying archive pages
+ * The template for displaying courses for sale as well as courses already purchased
  *
  * @link https://developer.wordpress.org/themes/basics/template-hierarchy/
  *
@@ -32,17 +32,12 @@ if(count($results) > 0) {
         }
     }
 }
-echo '<pre>';
-print_r($owned);
-echo '</pre>';
-get_header(); ?>
+get_header(); 
+?>
 
 <div>
-	<header class="page-header">
-		<?php echo the_content(); ?>
-	</header><!-- .page-header -->
 	<div style="width:100vw; margin:10px;" class="row">
-		<div style="height:fit-content;" class="col-xl-4 btn btn-light">
+		<div style="height:fit-content; padding-right:30px; padding-left:50px;" class="col-xl-4 btn btn-light">
 		<div class="col-xl-12">
 			<h2 class="text-left">My Courses</h2>
 		</div>

@@ -1000,3 +1000,49 @@ function loginCss() {
 	wp_enqueue_style( 'logincss', get_theme_file_uri( '/assets/css/login.css' ));
 }
 
+function my_wp_nav_menu_args( $args = '' ) {
+ 
+	if( is_user_logged_in() ) {
+		$args['menu'] = 'logged-in';
+	} else {
+		$args['menu'] = 'logged-out';
+	}
+		return $args;
+	}
+	add_filter( 'wp_nav_menu_args', 'my_wp_nav_menu_args' );
+
+add_action('rest_api_init', 'paymentRoute');
+function paymentRoute() {
+	register_rest_route('api/v1', 'payment/', array(
+		'methods' => 'POST',
+		'callback' => 'payment'
+	));
+}
+
+function payment() {
+
+	\Stripe\Stripe::setApiKey('sk_test_51J8aHSL0JmGeLUnZm9kJW0jUjtwstzhxfuYB26JM4kodNEO55HncoJC7mXFhSGY4Sn4Ee1aRpDipEL8lI2EOZaoJ00fjcREd0u');
+
+	\Stripe\PaymentIntent::create([
+		'amount' => 50,
+		'currency' => 'usd',
+		'payment_method_types' => ['card'],
+		'receipt_email' => 'matthew.semroska@gmail.com',
+	  ]);
+}
+
+define('__ROOT__', dirname(dirname(__FILE__)));
+require_once(__ROOT__.'\twentyseventeen\stripe\stripe-php\init.php');
+
+function add_my_options_page() {
+
+	  acf_add_options_page(array(
+		'page_title'    => __('Theme General Settings'),
+		'menu_title'    => __('Theme Settings'),
+		'menu_slug'     => 'theme-general-settings',
+		'capability'    => 'edit_posts',
+		'redirect'      => false
+	));
+
+  }
+  add_action( 'plugins_loaded', 'add_my_options_page' );

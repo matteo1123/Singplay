@@ -1,6 +1,6 @@
 <?php
 /**
- * The template for displaying all single posts
+ * The template for displaying courses for sale as well as courses already purchased
  *
  * @link https://developer.wordpress.org/themes/basics/template-hierarchy/#single-post
  *
@@ -14,8 +14,31 @@ if(!is_user_logged_in()) {
 } else {
     $ID = get_the_ID();
     $purchased = $wpdb->get_results('SELECT * FROM wp_posts INNER JOIN wp_postmeta ON wp_posts.ID = wp_postmeta.post_id WHERE wp_posts.post_type = "coursesowned" AND wp_posts.post_status = "publish" ');
-
-}
+    if(count($purchased) > 0) {
+        $courses_owned = array();
+        $arr = array();
+        foreach($purchased as $result) {
+            if($arr['id'] != $result->id) {
+                array_push($courses_owned, $arr);
+                $arr = array();
+            }
+            if($result->meta_key == "course_id") {
+               $arr['course_id'] = get_field('course_id', $result);
+               $arr['id'] = $result->ID;
+            }
+            if($result->meta_key == "user_id") {
+                $arr['user_id'] = $result->meta_value;
+            }
+        }
+        foreach($courses_owned as $course) {
+            if($course['user_id'] == get_current_user_id()) {
+                $owned = $course['course_id'];
+            }
+        }
+    }
+    if(!in_array($ID, $owned)) {
+        get_template_part( 'template-parts/page/purchase');
+    } else {
 ?>
 <!DOCTYPE html>
 <html <?php language_attributes(); ?> class="no-js no-svg">
@@ -46,20 +69,6 @@ if(!is_user_logged_in()) {
 		<?php endif; ?>
 
 	</header><!-- #masthead -->
-
-	<?php
-
-	/*
-	 * If a regular post or page, and not the front page, show the featured image.
-	 * Using get_queried_object_id() here since the $post global may not be set before a call to the_post().
-	 */
-	if ( ( is_single() || ( is_page() && ! twentyseventeen_is_frontpage() ) ) && has_post_thumbnail( get_queried_object_id() ) ) :
-		echo '<div class="single-featured-image-header">';
-		echo get_the_post_thumbnail( get_queried_object_id(), 'twentyseventeen-featured-image' );
-		echo '</div><!-- .single-featured-image-header -->';
-	endif;
-	?>
-
 	<div >
 		<div >
 
@@ -93,9 +102,6 @@ if(count($results) > 0) {
         }
     }
 }
-// echo '<pre>';
-// print_r($user_results);
-// echo '</pre>';
 ?>
 <script type="text/javascript">
     let watches = <?php echo json_encode($user_watched); ?>;
@@ -154,3 +160,5 @@ if(count($results) > 0) {
 		</div><!-- #main -->
 	</div><!-- #primary -->
 </div><!-- .wrap -->
+<?php }
+} ?>

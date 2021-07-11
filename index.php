@@ -19,18 +19,25 @@ get_header(); ?>
 	<div id="primary" class="content-area">
 		<main id="main" class="site-main container" role="main">
 			<?php while(have_posts()) {
-				the_post();?>
-				<div class="post-item">
-					<h2 class="headline headline--medium headline--post-title"><a href="<?php echo the_permalink(); ?>"><?php echo the_title(); ?></a></h2>
-					<div class="meta-box">
-						<p> posted by Brad </p>
-					</div>
-					<div class="generic content">
-						<?php echo the_excerpt() ?>
-						<a class="btn" href=<?php echo the_permalink(); ?>Continue Reading &raquo;</a></p>
-					</div>
-				</div>
-			<?php } ?>
+				the_post();
+				if(get_field('premium') == "false") {?>
+					<a href="<?php echo the_permalink(); ?>">
+						<div style="min-height:300px; display:flex; margin-bottom:20px;" class="btn btn-dark btn-block container-fluid row">
+							<div class="col-8">
+									<h2 class="text-left"><?php echo the_title(); ?></h2>
+								</div>
+							<div class="col-4">
+								<?php if(get_the_post_thumbnail_url()){ ?>
+									<img style="height:200px; width:300px;" src="<?php echo get_the_post_thumbnail_url()?>"/>
+								<?Php } else { ?>
+									<img style="height:200px; width:300px;" src="/wp-content/uploads/2021/07/music-images-9-scaled.jpg">
+								<?php }; ?>
+							</div>
+							<p class="course-excerpts"><?php echo get_the_excerpt() ?></p>
+						</div>
+					</a>
+				<?php }
+				} ?>
 		</main>
 	</div>
 

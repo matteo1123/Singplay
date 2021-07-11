@@ -93,5 +93,19 @@ window.onload = ()=>{
                     myCoursesSection.appendChild(clone);
             });
         }
+        function payment(evt) {
+            $.ajax({
+                url:  '/wp-json/api/v1/payment',
+                type: 'POST',
+                data: {'class_id' : "hello"},
+                success: (res) => {
+                    console.log(res);
+                },
+                error: (err) => {
+                    console.log("err", err)
+                }
+            });
+        }
+        payment();
     })( jQuery );
 };
