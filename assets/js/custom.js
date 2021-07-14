@@ -25,7 +25,7 @@ window.onload = ()=>{
                     }
                 });
             })
-            
+
             function setupClass() {
                 let watchedButton = $('.watched')
                 if (watches && watches.includes(watchedButton.attr('data-id'))) {
@@ -60,13 +60,13 @@ window.onload = ()=>{
                     }
                 });
             }
-    
+
             function unwatched(evt) {
                 let delete_post
                 user_results.forEach((result)=> {
                     if(result.class_id == $(evt.target).attr('data-id')) delete_post = result;
                 })
-            
+
                 $.ajax({
                     url:  '/wp-json/api/v1/manageWatches',
                     type: 'DELETE',
@@ -86,26 +86,50 @@ window.onload = ()=>{
             document.querySelectorAll('.myOwnedCourses').forEach((course, i)=> {
                 let clone = course.cloneNode(true);
                 clone.style.display="block";
-                console.log(clone)
                 if(i == 0) {
                     myCoursesSection.innerHTML = "";
                 }
                     myCoursesSection.appendChild(clone);
             });
         }
-        function payment(evt) {
-            $.ajax({
-                url:  '/wp-json/api/v1/payment',
-                type: 'POST',
-                data: {'class_id' : "hello"},
-                success: (res) => {
-                    console.log(res);
-                },
-                error: (err) => {
-                    console.log("err", err)
-                }
-            });
-        }
-        payment();
+        if(image && user_id && course_id && unit_amount) {
+          function payment(evt) {
+                  $.ajax({
+                      url:  '/wp-json/api/v1/payment',
+                      type: 'POST',
+                      data: {
+                          'success_url' : window.location.origin + "/courses",
+                          'cancel_url' : window.location.origin + "/courses",
+                          'image': image,
+                          'unit_amount': unit_amount * 100,
+                          'title' : title,
+                          'user_id':user_id,
+                          'course_id':course_id                                                    
+                      },
+                      success: (res) => {
+                         window.location = res.url;
+                      },
+                      error: (err) => {
+                          console.log("err", err)
+                      }
+                  });
+              }
+              payment();
+          }
+
+        // $('#button').click(ownership);
+        // function ownership() {
+        //     $.ajax({
+        //         url:  '/wp-json/api/v1/purchased' + `?user_id=${user_id}&&course_id=${course_id}`,
+        //         type: 'GET',
+        //         success: (res) => {
+        //             console.log(res);
+        //         },
+        //         error: (err) => {
+        //             console.log("err", err)
+        //         }
+        //     });
+        // }
+
     })( jQuery );
 };

@@ -9,7 +9,19 @@
  * @since Twenty Seventeen 1.0
  * @version 1.0
  */
-if(!is_user_logged_in()) {
+?>
+<!DOCTYPE html>
+<html <?php language_attributes(); ?> class="no-js no-svg">
+<head>
+<meta charset="<?php bloginfo( 'charset' ); ?>">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="profile" href="https://gmpg.org/xfn/11">
+
+<?php wp_head(); ?>
+</head>
+
+<body>
+ <?php if(!is_user_logged_in()) {
     wp_redirect("/");
 } else {
     $ID = get_the_ID();
@@ -36,21 +48,11 @@ if(!is_user_logged_in()) {
             }
         }
     }
-    if(!in_array($ID, $owned)) {
+    if(!is_array($owned) || !in_array($ID, $owned)) {
         get_template_part( 'template-parts/page/purchase');
     } else {
 ?>
-<!DOCTYPE html>
-<html <?php language_attributes(); ?> class="no-js no-svg">
-<head>
-<meta charset="<?php bloginfo( 'charset' ); ?>">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="profile" href="https://gmpg.org/xfn/11">
-
-<?php wp_head(); ?>
-</head>
-
-<body <?php body_class(); ?>>
+<?php body_class(); ?>>
 <?php wp_body_open(); ?>
 <div id="page" class="site">
 	<a class="skip-link screen-reader-text" href="#content"><?php _e( 'Skip to content', 'twentyseventeen' ); ?></a>
@@ -112,7 +114,7 @@ if(count($results) > 0) {
 	<div class="container" style="margin:0;">
 		<div style="width:100vw;" class="row">
         <div class="col-9" style="height: 1000px; padding:0;">
-        <div style="width:100%; height:100%; border:0;" class="class_window">
+        <div style="width:100%; height:100%; border:0;" oncontextmenu="return false;" class="class_window">
         </div>
         </div>
         <div style="padding:0; margin:0;" class="col-3">
@@ -121,21 +123,21 @@ if(count($results) > 0) {
                     <?php foreach( $add_classes as $post ):?>
                     <?php if(is_array($user_watched)): ?>
                         <?php if(in_array(get_the_ID(),$user_watched)): ?>
-                        
-                        <div 
+
+                        <div
                             title="view <?php echo get_the_title()?>"
-                            data-post=<?php echo basename(get_permalink()) ?>  
+                            data-post=<?php echo basename(get_permalink()) ?>
                             data-id=<?php echo get_the_ID() ?>
-                            style="padding: 45px 45px 45px 30px; margin:0;"  
+                            style="padding: 45px 45px 45px 30px; margin:0;"
                             class="class-link btn btn-outline-light btn-block row"
                         >
                             <li ><?php echo get_the_title() ?></li>
                         </div>
                         <?php else: ?>
-                            <div 
-                                data-post=<?php echo basename(get_permalink()) ?> 
+                            <div
+                                data-post=<?php echo basename(get_permalink()) ?>
                                 data-id=<?php echo get_the_ID() ?>
-                                style="padding: 45px 45px 45px 30px; margin:0;"  
+                                style="padding: 45px 45px 45px 30px; margin:0;"
                                 class="class-link btn btn-block btn-outline-dark row"
                                 title="view <?php echo get_the_title()?> again (already completed lesson)"
                             >
@@ -143,18 +145,18 @@ if(count($results) > 0) {
                             </div>
                         <?php endif; ?>
                     <?php else: ?>
-                        <div 
+                        <div
                             title="view <?php echo get_the_title()?>"
                             data-id=<?php echo get_the_ID() ?>
-                            data-post=<?php echo basename(get_permalink()) ?>  
-                            style="padding: 45px 45px 45px 30px; margin:0;"  
+                            data-post=<?php echo basename(get_permalink()) ?>
+                            style="padding: 45px 45px 45px 30px; margin:0;"
                             class="class-link btn btn-outline-dark btn-block row"
                         >
                             <li ><?php echo get_the_title() ?></li>
                         </div>
                     <?php endif; ?>
                 <?php endforeach;
-                } ?> 
+                } ?>
             </ol>
         </div>
 		</div><!-- #main -->

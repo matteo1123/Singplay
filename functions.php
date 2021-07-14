@@ -452,8 +452,7 @@ add_action( 'wp_head', 'twentyseventeen_colors_css_wrap' );
 function twentyseventeen_scripts() {
 	// Add custom fonts, used in the main stylesheet.
 	wp_enqueue_style( 'twentyseventeen-fonts', twentyseventeen_fonts_url(), array(), null );
-	wp_enqueue_style( 'bs_css', "https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" );
-	
+	wp_enqueue_style( 'bs_css', "https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" );
 
 	// Theme stylesheet.
 	wp_enqueue_style( 'twentyseventeen-style', get_stylesheet_uri(), array(), '20201208' );
@@ -691,7 +690,7 @@ function single_column( $columns ) {
     return $columns;
 }
 add_filter( 'screen_layout_columns', 'single_column' );
- 
+
 function one_column_dashboard(){
 	return 1;
 }
@@ -704,29 +703,29 @@ global $wp_meta_boxes;
 wp_add_dashboard_widget('custom_help_widget', 'DASHBOARD', 'custom_dashboard_help');
 }
 function custom_dashboard_help() {
-	// ROW WITH HEADING	
+	// ROW WITH HEADING
 	echo '
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 	<div>
 	<h2>Quick Links</h2>
 	<hr>
 	</div>';
-	
-// COLUMNS WITH SHORTCUTS	
-	echo '<div class="row" style="width:80vw; display:flex; justify-content:space-around;"> 
+
+// COLUMNS WITH SHORTCUTS
+	echo '<div class="row" style="width:80vw; display:flex; justify-content:space-around;">
   	<div class="col-md-2 col-12"><a title="Pages make up the back bone of the site"  href="/wp-admin/edit.php?post_type=page" class="btn col-12 btn-lg btn-dark">Pages</a></div>
 	<div class="col-md-2"><a href="/wp-admin/edit.php" title="Posts are open to the public free to everyone content that you can easily generate" class="btn col-12 btn-lg btn-dark">Posts</a></div>
 	<div class="col-md-2"><a href="/wp-admin/edit.php?post_type=courses" title="One course consists of many classes" class="btn col-12 btn-lg btn-dark">Courses</a></div>
 	<div class="col-md-2"><a href="/wp-admin/edit.php?post_type=classes" title="classes are often videos but can be other content as well" class="btn col-12 btn-lg btn-dark">Classes</a></div>
   	<div class="col-md-2"><a href="/wp-admin/nav-menus.php" title="your payments portal" class="btn btn-lg px-0 col-12 btn-dark">Payments</a></div>
   </div>';
-  
 
-	
-// Don’rtemove this one here below	
+
+
+// Don’rtemove this one here below
 }
 function custom_post_type() {
- 
+
 	// Set UI labels for Custom Post Type
 		$labels = array(
 			'name'                => _x( 'Courses', 'Post Type General Name', 'twentytwenty' ),
@@ -743,21 +742,21 @@ function custom_post_type() {
 			'not_found'           => __( 'Not Found', 'twentytwenty' ),
 			'not_found_in_trash'  => __( 'Not found in Trash', 'twentytwenty' ),
 		);
-		 
+
 	// Set other options for Custom Post Type
-		 
+
 		$args = array(
 			'label'               => __( 'courses', 'twentytwenty' ),
 			'description'         => __( 'A selection of lessons', 'twentytwenty' ),
 			'labels'              => $labels,
 			// Features this CPT supports in Post Editor
 			'supports'            => array( 'title', 'excerpt', 'author', 'thumbnail', 'comments', 'custom-fields', ),
-			// You can associate this CPT with a taxonomy or custom taxonomy. 
+			// You can associate this CPT with a taxonomy or custom taxonomy.
 			'taxonomies'          => array( 'genres' ),
 			/* A hierarchical CPT is like Pages and can have
 			* Parent and child items. A non-hierarchical CPT
 			* is like Posts.
-			*/ 
+			*/
 			'hierarchical'        => false,
 			'public'              => false,
 			'show_ui'             => true,
@@ -772,9 +771,9 @@ function custom_post_type() {
 			'capability_type'     => 'course',
 			'map_meta_cap'  	  => true,
 			'show_in_rest' => false,
-	 
+
 		);
-		 
+
 		// Registering your Custom Post Type
 		register_post_type( 'courses', $args );
 
@@ -794,21 +793,21 @@ function custom_post_type() {
 				'not_found'           => __( 'Not Found', 'twentytwenty' ),
 				'not_found_in_trash'  => __( 'Not found in Trash', 'twentytwenty' ),
 			);
-			 
+
 		// Set other options for Custom Post Type
-			 
+
 			$classargs = array(
 				'label'               => __( 'Classes', 'twentytwenty' ),
 				'description'         => __( 'A selection of lessons', 'twentytwenty' ),
 				'labels'              => $classlabels,
 				// Features this CPT supports in Post Editor
 				'supports'            => array( 'title', 'editor', 'author', 'comments', 'custom-fields', ),
-				// You can associate this CPT with a taxonomy or custom taxonomy. 
+				// You can associate this CPT with a taxonomy or custom taxonomy.
 				'taxonomies'          => array( 'genres' ),
 				/* A hierarchical CPT is like Pages and can have
 				* Parent and child items. A non-hierarchical CPT
 				* is like Posts.
-				*/ 
+				*/
 				'hierarchical'        => false,
 				'public'              => false,
 				'show_ui'             => true,
@@ -823,9 +822,9 @@ function custom_post_type() {
 				'capability_type'     => 'class',
 				'map_meta_cap'  	  => true,
 				'show_in_rest' 		  => true,
-		 
+
 			);
-			 
+
 		$watcheslabels = array(
 			'name'                => _x( 'Watches', 'Post Type General Name', 'twentytwenty' ),
 			'singular_name'       => _x( 'Watches', 'Post Type Singular Name', 'twentytwenty' ),
@@ -837,21 +836,21 @@ function custom_post_type() {
 			'not_found'           => __( 'Not Found', 'twentytwenty' ),
 			'not_found_in_trash'  => __( 'Not found in Trash', 'twentytwenty' ),
 		);
-		 
+
 	// Set other options for Custom Post Type
-		 
+
 		$watchesargs = array(
 			'label'               => __( 'watches', 'twentytwenty' ),
 			'description'         => __( 'tracking of which videos students have already watched', 'twentytwenty' ),
 			'labels'              => $watcheslabels,
 			// Features this CPT supports in Post Editor
 			'supports'            => array( 'title' ),
-			// You can associate this CPT with a taxonomy or custom taxonomy. 
+			// You can associate this CPT with a taxonomy or custom taxonomy.
 			'taxonomies'          => array( 'genres' ),
 			/* A hierarchical CPT is like Pages and can have
 			* Parent and child items. A non-hierarchical CPT
 			* is like Posts.
-			*/ 
+			*/
 			'hierarchical'        => false,
 			'public'              => false,
 			'show_ui'             => true,
@@ -864,7 +863,7 @@ function custom_post_type() {
 			'exclude_from_search' => false,
 			'publicly_queryable'  => true,
 			'show_in_rest' 		  => false,
-	 
+
 		);
 		$courseslabels = array(
 			'name'                => _x( 'Course Ownership', 'Post Type General Name', 'twentytwenty' ),
@@ -877,21 +876,21 @@ function custom_post_type() {
 			'not_found'           => __( 'Not Found', 'twentytwenty' ),
 			'not_found_in_trash'  => __( 'Not found in Trash', 'twentytwenty' ),
 		);
-		 
+
 	// Set other options for Custom Post Type
-		 
+
 		$coursesargs = array(
 			'label'               => __( 'watches', 'twentytwenty' ),
 			'description'         => __( 'tracking of which videos students have already watched', 'twentytwenty' ),
 			'labels'              => $courseslabels,
 			// Features this CPT supports in Post Editor
 			'supports'            => array( 'title' ),
-			// You can associate this CPT with a taxonomy or custom taxonomy. 
+			// You can associate this CPT with a taxonomy or custom taxonomy.
 			'taxonomies'          => array( 'genres' ),
 			/* A hierarchical CPT is like Pages and can have
 			* Parent and child items. A non-hierarchical CPT
 			* is like Posts.
-			*/ 
+			*/
 			'hierarchical'        => false,
 			'public'              => false,
 			'show_ui'             => true,
@@ -904,27 +903,27 @@ function custom_post_type() {
 			'exclude_from_search' => false,
 			'publicly_queryable'  => true,
 			'show_in_rest' 		  => false,
-	 
+
 		);
-		 
+
 		// Registering your Custom Post Type
 			register_post_type( 'watches', $watchesargs );
 			register_post_type( 'coursesowned', $coursesargs );
 			register_post_type( 'courses', $args );
 			register_post_type( 'classes', $classargs );
-	 
+
 	}
-	 
+
 	/* Hook into the 'init' action so that the function
-	* Containing our post type registration is not 
-	* unnecessarily executed. 
+	* Containing our post type registration is not
+	* unnecessarily executed.
 	*/
-	 
+
 	add_action( 'init', 'custom_post_type', 0 );
 
 // Register a courses ACF Block
 if( function_exists('acf_register_block') ) {
-	
+
 	$result = acf_register_block(array(
 		'name'				=> 'courses',
 		'title'				=> __('courses'),
@@ -987,7 +986,7 @@ function removeAdminBar() {
 	}
 }
 
-// customize login screen 
+// customize login screen
 add_filter('login_headerurl', 'ourHeaderUrl');
 
 function ourHeaderUrl() {
@@ -1001,7 +1000,7 @@ function loginCss() {
 }
 
 function my_wp_nav_menu_args( $args = '' ) {
- 
+
 	if( is_user_logged_in() ) {
 		$args['menu'] = 'logged-in';
 	} else {
@@ -1012,6 +1011,7 @@ function my_wp_nav_menu_args( $args = '' ) {
 	add_filter( 'wp_nav_menu_args', 'my_wp_nav_menu_args' );
 
 add_action('rest_api_init', 'paymentRoute');
+
 function paymentRoute() {
 	register_rest_route('api/v1', 'payment/', array(
 		'methods' => 'POST',
@@ -1019,30 +1019,131 @@ function paymentRoute() {
 	));
 }
 
-function payment() {
+function payment($data) {
 
-	\Stripe\Stripe::setApiKey('sk_test_51J8aHSL0JmGeLUnZm9kJW0jUjtwstzhxfuYB26JM4kodNEO55HncoJC7mXFhSGY4Sn4Ee1aRpDipEL8lI2EOZaoJ00fjcREd0u');
+	$amount = $data['unit_amount'];
+	$image = $data['image'];
+	$title = $data['title'];
+	$success = $data['success_url'];
+	$cancel = $data['cancel_url'];
+	$user_id = $data['user_id'];
+	$course_id = $data['course_id'];
 
-	\Stripe\PaymentIntent::create([
-		'amount' => 50,
-		'currency' => 'usd',
+	$YOUR_DOMAIN = get_site_url();
+
+	\Stripe\Stripe::setApiKey(get_field('private_key', 301));
+	try{
+	$checkout_session = \Stripe\Checkout\Session::create([
 		'payment_method_types' => ['card'],
-		'receipt_email' => 'matthew.semroska@gmail.com',
+		'line_items' => [[
+		  'price_data' => [
+			'currency' => 'usd',
+			'unit_amount' => $amount,
+			'product_data' => [
+			  'name' => $title,
+			  'images' => [$image],
+			],
+		  ],
+		  'quantity' => 1,
+		]],
+		'metadata'=> array(
+			'user_id' => $user_id,
+			'course_id' => $course_id
+		),
+		'mode' => 'payment',
+		'success_url' => $success,
+		'cancel_url' => $cancel,
 	  ]);
+	} catch (Exception $e) {
+		error_log($e->getMessage());
+	}
+	//   header("HTTP/1.1 303 See Other");
+	//   header("Location: " . $checkout_session->url);
+	  return $checkout_session;
 }
 
 define('__ROOT__', dirname(dirname(__FILE__)));
 require_once(__ROOT__.'\twentyseventeen\stripe\stripe-php\init.php');
 
-function add_my_options_page() {
-
-	  acf_add_options_page(array(
-		'page_title'    => __('Theme General Settings'),
-		'menu_title'    => __('Theme Settings'),
-		'menu_slug'     => 'theme-general-settings',
-		'capability'    => 'edit_posts',
-		'redirect'      => false
+add_action('rest_api_init', 'purchasedRoutes');
+function purchasedRoutes() {
+	register_rest_route('api/v1', 'purchased/', array(
+		'methods' => 'POST',
+		'callback' => 'purchased'
 	));
+}
 
-  }
-  add_action( 'plugins_loaded', 'add_my_options_page' );
+function purchased($data) {
+
+	\Stripe\Stripe::setApiKey(get_field('private_key', 301));
+	$endpoint_secret = get_field('endpoint_secret', 301);
+	$payload = @file_get_contents('php://input');
+	$sig_header = $_SERVER['HTTP_STRIPE_SIGNATURE'];
+	$event = null;
+	try {
+		$event = \Stripe\Webhook::constructEvent(
+			$payload, $sig_header, $endpoint_secret
+		);
+	} catch(\UnexpectedValueException $e) {
+		// Invalid payload
+		error_log("unexpectedValue".$e);
+		http_response_code(400);
+		exit();
+	} catch(\Stripe\Exception\SignatureVerificationException $e) {
+		// Invalid signature
+		error_log("invalidSignature: ".$e);
+		http_response_code(400);
+		exit();
+	}
+
+	switch ($event->type) {
+		case 'checkout.session.completed':
+			$paymentIntent = $event->data->object; // contains a \Stripe\PaymentIntent
+			award_ownership($paymentIntent->metadata);
+			error_log($paymentIntent->metadata);
+			break;
+		default:
+			error_log('Received unknown event type ' . $event->type);
+	}
+	http_response_code(200);
+}
+
+function award_ownership($data) {
+	$user_id = $data->user_id;
+	$course_id = $data->course_id;
+	$user_info = WP_User::get_data_by( 'ID', $user_id );
+	global $wpdb;
+	$results = $wpdb->get_results('SELECT * FROM wp_posts INNER JOIN wp_postmeta ON wp_posts.ID = wp_postmeta.post_id WHERE wp_posts.post_type = "coursesowned" AND wp_posts.post_status = "publish"  ');
+	$post_id;
+	foreach($results as $result) {
+		if($result->meta_key == "user_id") {
+			if($result->meta_value == $user_id) {
+				$post_id = $result->post_id;
+			}
+		}
+	}
+	if($post_id) {
+		$courses = get_field('course_id', $post_id);
+		if(is_array($courses)) {
+			array_push($courses, $course_id);
+		} else {
+			$courses = array([0] => $course_id);
+		}
+		error_log(print_r($courses, true));
+		update_field('course_id', $courses, $post_id);
+	} else {
+		$new_post = array(
+			'post_author' => 0,
+			'post_title' => $user_info->user_login,
+			'post_status' => 'publish',
+			'post_type' => 'coursesowned'
+		);
+		$new_post = wp_insert_post($new_post);
+		if($new_post != 0) {
+			error_log(print_r($new_post, true));
+			$arr = array($course_id);
+			update_field('course_id', $arr, $new_post);
+			update_field('user_id', $user_id, $new_post);
+		}
+	}
+}
