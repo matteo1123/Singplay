@@ -4419,3 +4419,11 @@ p > object:only-child {
 	white-space:break-spaces;
 	text-align:left;
 }
+
+#fade-in {
+	animation: fadeIn linear 4s;
+}
+@keyframes fadeIn {
+	0% {opacity:0;}
+	100% {opacity:1;}
+}

@@ -92,7 +92,7 @@ window.onload = ()=>{
                     myCoursesSection.appendChild(clone);
             });
         }
-        if(image && user_id && course_id && unit_amount) {
+        if(purchase) {
           function payment(evt) {
                   $.ajax({
                       url:  '/wp-json/api/v1/payment',
@@ -116,20 +116,64 @@ window.onload = ()=>{
               }
               payment();
           }
+          if(subscription) {
+            function subscribe(evt) {
+                    $.ajax({
+                        url:  '/wp-json/api/v1/subscription',
+                        type: 'POST',
+                        data: {
+                            'success_url' : window.location.origin + "/thank-you-for-subscribing/",
+                            'cancel_url' : window.location.origin + "/welcome-back",
+                            'image': image,
+                            'unit_amount': unit_amount * 100,
+                            'title' : title,
+                            'user_id':user_id,                                            
+                        },
+                        success: (res) => {
+                           window.location = res.url;
+                        },
+                        error: (err) => {
+                            console.log("err", err.responseText)
+                        }
+                    });
+                }
+                subscribe();
+            }
+        $('#cancelSubscription').click(function() {
+            $.ajax({
+                url:  '/wp-json/api/v1/cancelSubscription',
+                type: 'POST',
+                data: {
+                    'user_id':user_id,
+                },
+                success: (res) => {
 
-        // $('#button').click(ownership);
-        // function ownership() {
-        //     $.ajax({
-        //         url:  '/wp-json/api/v1/purchased' + `?user_id=${user_id}&&course_id=${course_id}`,
-        //         type: 'GET',
-        //         success: (res) => {
-        //             console.log(res);
-        //         },
-        //         error: (err) => {
-        //             console.log("err", err)
-        //         }
-        //     });
-        // }
+                    window.location = window.location.origin + "/subscription-cancelled";
+                },
+                error: (err) => {
+                    console.log("err", err)
+                }
+            });
+        });
+        console.log(end_date, Math.floor(Date.now()/1000), end_date && end_date > Math.floor(Date.now()/1000));
+        if(end_date) {
+            if(end_date < Math.floor(Date.now()/1000)) {
+                console.log('block access');
+                $.ajax({
+                    url:  '/wp-json/api/v1/subscription',
+                    type: 'DELETE',
+                    data: {
+                        'user_id':user_id,
+                    },
+                    success: (res) => {
+                        console.log('membership removed')
+                    },
+                    error: (err) => {
+                        console.log("err", err)
+                    }
+                });
+            }
+        }
 
     })( jQuery );
 };

@@ -1,4 +1,5 @@
 <script>
+    purchase = true;
     let user_id = <?php echo get_current_user_id(); ?>;
     let course_id = <?php echo get_the_id(); ?>;
     let unit_amount = <?php echo the_field('list_price', get_the_ID());?>;

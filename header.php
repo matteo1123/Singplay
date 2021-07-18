@@ -64,6 +64,12 @@ $page_id = $wp_query->queried_object->post_name;
 		echo the_field('public', get_the_ID());
 	}
 	?>
+	<script>
+		let user_id = <?php echo get_current_user_id(); ?>;
+		let purchase = null;
+		let subscription = null;
+		let end_date = '<?php echo get_field('end_date',  "user_".get_current_user_id())?>' || null;
+	</script>
 	<div class="site-content-contain">
 		<div id="content" class="site-content">
 		

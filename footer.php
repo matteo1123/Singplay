@@ -17,7 +17,7 @@
 		</div><!-- #content -->
 
 		<footer id="colophon" class="site-footer" role="contentinfo">
-			<div class="wrap">
+			<div style="display:flex; justify-content:flex-end;" class="wrap">
 				<?php
 				get_template_part( 'template-parts/footer/footer', 'widgets' );
 
@@ -41,6 +41,29 @@
 
 				get_template_part( 'template-parts/footer/site', 'info' );
 				?>
+				<?php
+				if(is_user_logged_in()) {
+					$user_meta=get_userdata(get_current_user_id());
+					$user_roles=$user_meta->roles;
+					?>
+					<a href=<?php echo wp_logout_url(); ?> class="btn btn-outline-secondary">Logout</a>
+					</div>
+					<div style="display:flex; justify-content:center;">
+						<?php if(!in_array("administrator", $user_roles)) {
+							$user_id = get_current_user_id();
+							if(!get_field('end_date', "user_$user_id")) {
+								if(!in_array("student", $user_roles)) {
+									echo "<a id='cancelSubscription' class='btn btn-outline-secondary'>cancel subscription</a>";
+								} else {
+									echo "<a href='/sarahs-corner/' class='btn btn-outline-secondary'>Premium Content</a>";
+								}
+							}
+						}?>	
+					</div>
+				<?php } else { ?>
+					<a href=<?php echo wp_registration_url(); ?> class="btn btn-small btn-secondary">Sign Up</a>
+					<a href=<?php echo wp_login_url(); ?> class=" btn btn-outline-secondary">Login</a>
+				<?php } ?>
 			</div><!-- .wrap -->
 		</footer><!-- #colophon -->
 	</div><!-- .site-content-contain -->

@@ -1011,7 +1011,6 @@ function my_wp_nav_menu_args( $args = '' ) {
 	add_filter( 'wp_nav_menu_args', 'my_wp_nav_menu_args' );
 
 add_action('rest_api_init', 'paymentRoute');
-
 function paymentRoute() {
 	register_rest_route('api/v1', 'payment/', array(
 		'methods' => 'POST',
@@ -1072,7 +1071,7 @@ function purchasedRoutes() {
 		'callback' => 'purchased'
 	));
 }
-
+// capture stripe webhooks for both subscriptions and course purchases
 function purchased($data) {
 
 	\Stripe\Stripe::setApiKey(get_field('private_key', 301));
@@ -1086,12 +1085,12 @@ function purchased($data) {
 		);
 	} catch(\UnexpectedValueException $e) {
 		// Invalid payload
-		error_log("unexpectedValue".$e);
+		error_log("1088: unexpectedValue".$e);
 		http_response_code(400);
 		exit();
 	} catch(\Stripe\Exception\SignatureVerificationException $e) {
 		// Invalid signature
-		error_log("invalidSignature: ".$e);
+		error_log("1093: invalidSignature: ".$e);
 		http_response_code(400);
 		exit();
 	}
@@ -1099,15 +1098,40 @@ function purchased($data) {
 	switch ($event->type) {
 		case 'checkout.session.completed':
 			$paymentIntent = $event->data->object; // contains a \Stripe\PaymentIntent
-			award_ownership($paymentIntent->metadata);
-			error_log($paymentIntent->metadata);
+			if($paymentIntent->mode != "subscription") {
+				award_ownership($paymentIntent->metadata);
+				error_log("checkout.session.completed".$paymentIntent->metadata);
+			}
 			break;
+			case 'invoice.paid':
+				error_log('invoice.paid');
+				$paymentIntent = $event->data->object;
+				if($paymentIntent->status == "paid") {
+					subscriptionConfirmed($paymentIntent->customer, $paymentIntent->subscription, true);
+				} else {
+					error_log('alternative status (other than paid): '.$paymentIntent->id);
+				}
+				break;
+			case 'customer.subscription.deleted':
+				error_log('customer.subscription.deleted');
+				$paymentIntent = $event->data->object;
+				finalCancel($paymentIntent->customer, $paymentIntent->current_period_end);
+				break;
 		default:
+			$paymentIntent = $event->data->object;
 			error_log('Received unknown event type ' . $event->type);
 	}
 	http_response_code(200);
 }
-
+function finalCancel($customer_id, $end_date) {
+	$stripe = new \Stripe\StripeClient(get_field('private_key', 301));
+	$customer = $stripe->customers->retrieve(
+	  $customer_id,
+	  []
+	);
+	$user_id = $customer->metadata->user_id;
+	update_field('end_date', $end_date, "user_$user_id");
+}
 function award_ownership($data) {
 	$user_id = $data->user_id;
 	$course_id = $data->course_id;
@@ -1129,7 +1153,6 @@ function award_ownership($data) {
 		} else {
 			$courses = array([0] => $course_id);
 		}
-		error_log(print_r($courses, true));
 		update_field('course_id', $courses, $post_id);
 	} else {
 		$new_post = array(
@@ -1140,10 +1163,117 @@ function award_ownership($data) {
 		);
 		$new_post = wp_insert_post($new_post);
 		if($new_post != 0) {
-			error_log(print_r($new_post, true));
 			$arr = array($course_id);
 			update_field('course_id', $arr, $new_post);
 			update_field('user_id', $user_id, $new_post);
 		}
 	}
 }
+
+function subscriptionConfirmed($customer_id, $subscription_id, $status) {
+	$stripe = new \Stripe\StripeClient(get_field('private_key', 301));
+	  $customer = $stripe->customers->retrieve(
+		$customer_id,
+		[]
+	  );
+	  $user_id = $customer->metadata->user_id;
+	$user = wp_update_user( array( 'ID' => $user_id, 'role' => 'student_subscriber' ));
+	update_field('subscription', $subscription_id, "user_$user_id");
+	update_field('customer', $customer_id, "user_$user_id");
+}
+
+add_action('rest_api_init', 'subscriptionRoute');
+function subscriptionRoute() {
+	register_rest_route('api/v1', 'subscription/', array(
+		'methods' => 'POST',
+		'callback' => 'subscription'
+	));
+	register_rest_route('api/v1', 'subscription/', array(
+		'methods' => 'DELETE',
+		'callback' => 'blockAccess'
+	));
+	register_rest_route('api/v1', 'subscribed/', array(
+		'methods' => 'GET',
+		'callback' => 'subscribed'
+	));
+
+	register_rest_route('api/v1', 'cancelSubscription/', array(
+		'methods' => 'POST',
+		'callback' => 'cancelSubscription'
+	));
+}
+// interact with stripe creating a customer, then a session based on that customer
+function subscription($data) {
+	$amount = $data['unit_amount'];
+	$image = $data['image'];
+	$title = $data['title'];
+	$success = $data['success_url'];
+	$cancel = $data['cancel_url'];
+	$user_id = $data['user_id'];
+	$priceId = get_field('price_id', 301);
+	$YOUR_DOMAIN = get_site_url();
+	$user_info = WP_User::get_data_by( 'ID', $user_id );
+	try{
+		$stripe = new \Stripe\StripeClient( get_field('private_key', 301) );
+		$customer = $stripe->customers->create([
+		'email' => $user_info->data->user_email,
+		'description' => 'My First Test Customer (created for API docs)',
+		"metadata" => ["user_id" => $user_id],
+		]);
+
+	\Stripe\Stripe::setApiKey(get_field('private_key', 301));
+	$checkout_session = \Stripe\Checkout\Session::create([
+		'client_reference_id' => $customer->id,
+		'customer' => $customer->id,
+		'success_url' => $success,
+		'cancel_url' => $cancel,
+		'payment_method_types' => ['card'],
+		'mode' => 'subscription',
+		'line_items' => [[
+		  'price' => $priceId,
+		  'quantity' => 1,
+		]],
+	  ]);
+	
+	} catch (Exception $e) {
+		error_log($e->getMessage());
+	}
+	//   header("HTTP/1.1 303 See Other");
+	//   header("Location: " . $checkout_session->url);
+	  return $checkout_session;
+}
+
+function subscribed($data) {
+	$user_id = $_GET['user_id'];
+}
+
+function cancelSubscription($data) {
+	try{
+		$user_id = $data['user_id'];
+		\Stripe\Stripe::setApiKey(get_field('private_key', 301));
+
+		\Stripe\Subscription::update(
+		get_field('subscription', "user_$user_id"),
+		[
+			'cancel_at_period_end' => true,
+		]
+		);
+		$stripe = new \Stripe\StripeClient(get_field('private_key', 301));
+		$sub = $stripe->subscriptions->cancel(
+			get_field('subscription', "user_$user_id"),
+			[]
+		);
+		
+	} catch (Exception $e) {
+		error_log($e->getMessage()); 
+	}
+	return $sub;
+}
+function blockAccess($data) {
+	error_log('block access');
+	$user_id = $data['user_id'];
+	$user = wp_update_user( array( 'ID' => $user_id, 'role' => 'student' ));
+	update_field('end_date', '', "user_$user_id");
+	update_field('subscription', '', "user_$user_id");
+	return true;
+} 

@@ -1,146 +1,185 @@
-{
-    "id": "pi_1JCC4ZL0JmGeLUnZQyNE3kTG",
-    "object": "payment_intent",
-    "amount": 1199,
-    "amount_capturable": 0,
-    "amount_received": 1199,
-    "application": null,
-    "application_fee_amount": null,
-    "canceled_at": null,
-    "cancellation_reason": null,
-    "capture_method": "automatic",
-    "charges": {
-        "object": "list",
-        "data": [
-            {
-                "id": "ch_1JCC4sL0JmGeLUnZ1hFA5psK",
-                "object": "charge",
-                "amount": 1199,
-                "amount_captured": 1199,
-                "amount_refunded": 0,
-                "application": null,
-                "application_fee": null,
-                "application_fee_amount": null,
-                "balance_transaction": "txn_1JCC4tL0JmGeLUnZvWekcMnN",
-                "billing_details": {
-                    "address": {
-                        "city": null,
-                        "country": "US",
-                        "line1": null,
-                        "line2": null,
-                        "postal_code": "80228",
-                        "state": null
-                    },
-                    "email": "matthew.semroska@gmail.com",
-                    "name": "matthew Semroska",
-                    "phone": null
-                },
-                "calculated_statement_descriptor": "HIREMATT.DEV",
-                "captured": true,
-                "created": 1626046130,
-                "currency": "usd",
-                "customer": "cus_JproHazlAo1fLT",
-                "description": null,
-                "destination": null,
-                "dispute": null,
-                "disputed": false,
-                "failure_code": null,
-                "failure_message": null,
-                "fraud_details": [],
-                "invoice": null,
-                "livemode": false,
-                "metadata": [],
-                "on_behalf_of": null,
-                "order": null,
-                "outcome": {
-                    "network_status": "approved_by_network",
-                    "reason": null,
-                    "risk_level": "normal",
-                    "risk_score": 60,
-                    "seller_message": "Payment complete.",
-                    "type": "authorized"
-                },
-                "paid": true,
-                "payment_intent": "pi_1JCC4ZL0JmGeLUnZQyNE3kTG",
-                "payment_method": "pm_1JCC4rL0JmGeLUnZJEwYYmOB",
-                "payment_method_details": {
-                    "card": {
-                        "brand": "visa",
-                        "checks": {
-                            "address_line1_check": null,
-                            "address_postal_code_check": "pass",
-                            "cvc_check": "pass"
-                        },
-                        "country": "US",
-                        "exp_month": 6,
-                        "exp_year": 2025,
-                        "fingerprint": "ZhJe8wAPmvlVOH3i",
-                        "funding": "credit",
-                        "installments": null,
-                        "last4": "4242",
-                        "network": "visa",
-                        "three_d_secure": null,
-                        "wallet": null
-                    },
-                    "type": "card"
-                },
-                "receipt_email": null,
-                "receipt_number": null,
-                "receipt_url": "https:\/\/pay.stripe.com\/receipts\/acct_1J8aHSL0JmGeLUnZ\/ch_1JCC4sL0JmGeLUnZ1hFA5psK\/rcpt_Jpro5JyvV2mWTzRnP43SqPkCMmn15Vz",
-                "refunded": false,
-                "refunds": {
-                    "object": "list",
-                    "data": [],
-                    "has_more": false,
-                    "total_count": 0,
-                    "url": "\/v1\/charges\/ch_1JCC4sL0JmGeLUnZ1hFA5psK\/refunds"
-                },
-                "review": null,
-                "shipping": null,
-                "source": null,
-                "source_transfer": null,
-                "statement_descriptor": null,
-                "statement_descriptor_suffix": null,
-                "status": "succeeded",
-                "transfer_data": null,
-                "transfer_group": null
-            }
-        ],
-        "has_more": false,
-        "total_count": 1,
-        "url": "\/v1\/charges?payment_intent=pi_1JCC4ZL0JmGeLUnZQyNE3kTG"
-    },
-    "client_secret": "pi_1JCC4ZL0JmGeLUnZQyNE3kTG_secret_TnXDT15lDhHop0h6BZF3AP6hl",
-    "confirmation_method": "automatic",
-    "created": 1626046111,
-    "currency": "usd",
-    "customer": "cus_JproHazlAo1fLT",
-    "description": null,
-    "invoice": null,
-    "last_payment_error": null,
-    "livemode": false,
-    "metadata": [],
-    "next_action": null,
-    "on_behalf_of": null,
-    "payment_method": "pm_1JCC4rL0JmGeLUnZJEwYYmOB",
-    "payment_method_options": {
-        "card": {
-            "installments": null,
-            "network": null,
-            "request_three_d_secure": "automatic"
-        }
-    },
-    "payment_method_types": [
-        "card"
-    ],
-    "receipt_email": null,
-    "review": null,
-    "setup_future_usage": null,
-    "shipping": null,
-    "source": null,
-    "statement_descriptor": null,
-    "statement_descriptor_suffix": null,
-    "status": "succeeded",
-    "transfer_data": null,
-    "transfer_group": null
-}
+Stripe\PaymentIntent Object
+(
+    [id] => pi_1JDmbXL0JmGeLUnZRcAP4dpS
+    [object] => payment_intent
+    [amount] => 499
+    [amount_capturable] => 0
+    [amount_received] => 499
+    [application] => 
+    [application_fee_amount] => 
+    [canceled_at] => 
+    [cancellation_reason] => 
+    [capture_method] => automatic
+    [charges] => Stripe\Collection Object
+        (
+            [object] => list
+            [data] => Array
+                (
+                    [0] => Stripe\Charge Object
+                        (
+                            [id] => ch_1JDmbYL0JmGeLUnZOSRgwkJL
+                            [object] => charge
+                            [amount] => 499
+                            [amount_captured] => 499
+                            [amount_refunded] => 0
+                            [application] => 
+                            [application_fee] => 
+                            [application_fee_amount] => 
+                            [balance_transaction] => txn_1JDmbYL0JmGeLUnZcFKnezF2
+                            [billing_details] => Stripe\StripeObject Object
+                                (
+                                    [address] => Stripe\StripeObject Object
+                                        (
+                                            [city] => 
+                                            [country] => US
+                                            [line1] => 
+                                            [line2] => 
+                                            [postal_code] => 80228
+                                            [state] => 
+                                        )
+
+                                    [email] => matthew.semroska@gmail.com
+                                    [name] => awds
+                                    [phone] => 
+                                )
+
+                            [calculated_statement_descriptor] => HIREMATT.DEV
+                            [captured] => 1
+                            [created] => 1626424868
+                            [currency] => usd
+                            [customer] => cus_JrVc3At0w0tBtx
+                            [description] => Subscription creation
+                            [destination] => 
+                            [dispute] => 
+                            [disputed] => 
+                            [failure_code] => 
+                            [failure_message] => 
+                            [fraud_details] => Array
+                                (
+                                )
+
+                            [invoice] => in_1JDmbXL0JmGeLUnZ0cbvDs9f
+                            [livemode] => 
+                            [metadata] => Stripe\StripeObject Object
+                                (
+                                )
+
+                            [on_behalf_of] => 
+                            [order] => 
+                            [outcome] => Stripe\StripeObject Object
+                                (
+                                    [network_status] => approved_by_network
+                                    [reason] => 
+                                    [risk_level] => normal
+                                    [risk_score] => 1
+                                    [seller_message] => Payment complete.
+                                    [type] => authorized
+                                )
+
+                            [paid] => 1
+                            [payment_intent] => pi_1JDmbXL0JmGeLUnZRcAP4dpS
+                            [payment_method] => pm_1JDmbWL0JmGeLUnZrwS4nCWi
+                            [payment_method_details] => Stripe\StripeObject Object
+                                (
+                                    [card] => Stripe\StripeObject Object
+                                        (
+                                            [brand] => visa
+                                            [checks] => Stripe\StripeObject Object
+                                                (
+                                                    [address_line1_check] => 
+                                                    [address_postal_code_check] => pass
+                                                    [cvc_check] => pass
+                                                )
+
+                                            [country] => US
+                                            [exp_month] => 6
+                                            [exp_year] => 2029
+                                            [fingerprint] => ZhJe8wAPmvlVOH3i
+                                            [funding] => credit
+                                            [installments] => 
+                                            [last4] => 4242
+                                            [network] => visa
+                                            [three_d_secure] => 
+                                            [wallet] => 
+                                        )
+
+                                    [type] => card
+                                )
+
+                            [receipt_email] => 
+                            [receipt_number] => 
+                            [receipt_url] => https://pay.stripe.com/receipts/acct_1J8aHSL0JmGeLUnZ/ch_1JDmbYL0JmGeLUnZOSRgwkJL/rcpt_JrVckRh5CY2DsMq23e2xzDc4AuoBuxy
+                            [refunded] => 
+                            [refunds] => Stripe\Collection Object
+                                (
+                                    [object] => list
+                                    [data] => Array
+                                        (
+                                        )
+
+                                    [has_more] => 
+                                    [total_count] => 0
+                                    [url] => /v1/charges/ch_1JDmbYL0JmGeLUnZOSRgwkJL/refunds
+                                )
+
+                            [review] => 
+                            [shipping] => 
+                            [source] => 
+                            [source_transfer] => 
+                            [statement_descriptor] => 
+                            [statement_descriptor_suffix] => 
+                            [status] => succeeded
+                            [transfer_data] => 
+                            [transfer_group] => 
+                        )
+
+                )
+
+            [has_more] => 
+            [total_count] => 1
+            [url] => /v1/charges?payment_intent=pi_1JDmbXL0JmGeLUnZRcAP4dpS
+        )
+
+    [client_secret] => pi_1JDmbXL0JmGeLUnZRcAP4dpS_secret_DqQ23WrBhgigeyfRcv2IKoNZb
+    [confirmation_method] => automatic
+    [created] => 1626424867
+    [currency] => usd
+    [customer] => cus_JrVc3At0w0tBtx
+    [description] => Subscription creation
+    [invoice] => in_1JDmbXL0JmGeLUnZ0cbvDs9f
+    [last_payment_error] => 
+    [livemode] => 
+    [metadata] => Stripe\StripeObject Object
+        (
+        )
+
+    [next_action] => 
+    [on_behalf_of] => 
+    [payment_method] => pm_1JDmbWL0JmGeLUnZrwS4nCWi
+    [payment_method_options] => Stripe\StripeObject Object
+        (
+            [card] => Stripe\StripeObject Object
+                (
+                    [installments] => 
+                    [network] => 
+                    [request_three_d_secure] => automatic
+                )
+
+        )
+
+    [payment_method_types] => Array
+        (
+            [0] => card
+        )
+
+    [receipt_email] => 
+    [review] => 
+    [setup_future_usage] => off_session
+    [shipping] => 
+    [source] => 
+    [statement_descriptor] => 
+    [statement_descriptor_suffix] => 
+    [status] => succeeded
+    [transfer_data] => 
+    [transfer_group] => 
+)

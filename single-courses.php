@@ -9,6 +9,9 @@
  * @since Twenty Seventeen 1.0
  * @version 1.0
  */
+if(!is_user_logged_in()) {
+    wp_redirect("/");
+} else {
 ?>
 <!DOCTYPE html>
 <html <?php language_attributes(); ?> class="no-js no-svg">
@@ -20,39 +23,23 @@
 <?php wp_head(); ?>
 </head>
 
-<body>
- <?php if(!is_user_logged_in()) {
-    wp_redirect("/");
-} else {
+<body <?php body_class(); ?>>
+ <?php 
     $ID = get_the_ID();
-    $purchased = $wpdb->get_results('SELECT * FROM wp_posts INNER JOIN wp_postmeta ON wp_posts.ID = wp_postmeta.post_id WHERE wp_posts.post_type = "coursesowned" AND wp_posts.post_status = "publish" ');
-    if(count($purchased) > 0) {
-        $courses_owned = array();
-        $arr = array();
-        foreach($purchased as $result) {
-            if($arr['id'] != $result->id) {
-                array_push($courses_owned, $arr);
-                $arr = array();
-            }
-            if($result->meta_key == "course_id") {
-               $arr['course_id'] = get_field('course_id', $result);
-               $arr['id'] = $result->ID;
-            }
-            if($result->meta_key == "user_id") {
-                $arr['user_id'] = $result->meta_value;
-            }
-        }
-        foreach($courses_owned as $course) {
-            if($course['user_id'] == get_current_user_id()) {
-                $owned = $course['course_id'];
-            }
-        }
-    }
+
+    $new_owned = get_posts(array(
+		'numberposts'	=> -1,
+		'post_type'		=> 'coursesowned',
+		'meta_key'		=> 'user_id',
+		'meta_value'	=> get_current_user_id()
+	));
+	if($new_owned) {
+		$owned = get_field('course_id', $new_owned[0]->ID);
+	}
     if(!is_array($owned) || !in_array($ID, $owned)) {
         get_template_part( 'template-parts/page/purchase');
     } else {
 ?>
-<?php body_class(); ?>>
 <?php wp_body_open(); ?>
 <div id="page" class="site">
 	<a class="skip-link screen-reader-text" href="#content"><?php _e( 'Skip to content', 'twentyseventeen' ); ?></a>
