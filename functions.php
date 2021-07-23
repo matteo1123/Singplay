@@ -1062,7 +1062,7 @@ function payment($data) {
 }
 
 define('__ROOT__', dirname(dirname(__FILE__)));
-require_once(__ROOT__.'\twentyseventeen\stripe\stripe-php\init.php');
+require_once(__ROOT__.'/twentyseventeen/stripe/stripe-php/init.php');
 
 add_action('rest_api_init', 'purchasedRoutes');
 function purchasedRoutes() {
