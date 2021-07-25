@@ -1,7 +1,7 @@
 window.onload = ()=>{
     (function( $ ) {
         // video for main page
-        console.log(window.location.pathname)
+        console.log(window.location)
         if(window.innerWidth > 1526 && window.location.pathname === "/") {
             let video = document.createElement("span");
             video.innerHTML = `'<video autoplay muted loop id="myVideo"><source src="wp-content/uploads/2021/07/A-Road-Passing-by-a-Sea-and-Mountains.mp4" type="video/mp4"></video>'`
