@@ -156,7 +156,6 @@ window.onload = ()=>{
                 }
             });
         });
-        console.log(end_date, Math.floor(Date.now()/1000), end_date && end_date > Math.floor(Date.now()/1000));
         if(end_date) {
             if(end_date < Math.floor(Date.now()/1000)) {
                 console.log('block access');
