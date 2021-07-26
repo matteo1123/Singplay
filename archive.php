@@ -55,7 +55,6 @@ if(!is_user_logged_in()) {
 										<?Php } else { ?>
 											<img style="height:150px; width:150px;"src="/wp-content/uploads/2021/07/music-images-9-scaled.jpg">
 										<?php } ?>
-										<p> posted by <?php echo the_author() ?></p>
 									</div>
 									<p class="course-excerpts"><?php echo get_the_excerpt() ?></p>
 								</div>
@@ -74,7 +73,6 @@ if(!is_user_logged_in()) {
 										<?Php } else { ?>
 											<img style="height:150px; width:150px;"src="/wp-content/uploads/2021/07/music-images-9-scaled.jpg">
 										<?php }; ?>
-										<p> posted by <?php echo the_author() ?></p>
 									</div>
 									<p class="course-excerpts"><?php echo get_the_excerpt() ?></p>
 								</div>
@@ -94,7 +92,6 @@ if(!is_user_logged_in()) {
 										<?Php } else { ?>
 											<img style="height:150px; width:150px;"src="/wp-content/uploads/2021/07/music-images-9-scaled.jpg">
 										<?php }; ?>
-										<p> posted by <?php echo the_author() ?></p>
 									</div>
 									<p class="course-excerpts"><?php echo get_the_excerpt() ?></p>
 								</div>
