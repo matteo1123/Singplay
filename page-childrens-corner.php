@@ -20,16 +20,15 @@ get_header();
 	<div id="primary" class="content-area">
 		<main id="main" class="site-main" role="main">
 			<?php 
-			$post_id = get_queried_object_id();
-			$content = get_the_content( null, false, $post_id );
-			echo $content;
+			wp_reset_query();
+			echo get_the_content();
 			$user_meta=get_userdata(get_current_user_id());
 			$user_roles=$user_meta->roles;
 			$args = array(
 			'numberposts'	=> -1,
 			'post_type'		=> 'post',
 			'meta_key'		=> 'premium',
-			'meta_value'	=> 'false'
+			'meta_value'	=> 'kids'
 			);
 			$the_query = new WP_Query($args);
 
